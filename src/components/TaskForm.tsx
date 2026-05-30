@@ -1,4 +1,4 @@
-import { useState } from "react"
+ï»¿import { useState } from "react"
 import type { Task } from "../types"
 
 interface TaskFormProps {
@@ -32,8 +32,8 @@ const TaskForm = ({ onSubmit, userId }: TaskFormProps) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} required />
-      <textarea placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
+      <input type="text" placeholder="Titulo" value={title} onChange={(e) => setTitle(e.target.value)} required />
+      <textarea placeholder="Descripcion" value={description} onChange={(e) => setDescription(e.target.value)} />
       <select value={priority} onChange={(e) => setPriority(e.target.value as Task["priority"])}>
         <option value="baja">Baja</option>
         <option value="media">Media</option>

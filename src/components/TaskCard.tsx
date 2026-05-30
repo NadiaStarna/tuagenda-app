@@ -1,4 +1,4 @@
-import type { Task } from "../types"
+ï»¿import type { Task } from "../types"
 
 interface TaskCardProps {
   task: Task
@@ -23,7 +23,7 @@ const TaskCard = ({ task, onDelete, onUpdate }: TaskCardProps) => {
         <p>{task.description}</p>
         <span>Prioridad: {task.priority}</span>
         <span> | Estado: {task.status}</span>
-        <span> | Categoría: {task.category}</span>
+        <span> | Categoria: {task.category}</span>
       </div>
       <button onClick={() => onDelete(task.id)}>Eliminar</button>
     </div>

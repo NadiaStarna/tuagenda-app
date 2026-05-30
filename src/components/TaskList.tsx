@@ -1,4 +1,4 @@
-import type { Task } from "../types"
+ï»¿import type { Task } from "../types"
 import TaskCard from "./TaskCard"
 
 interface TaskListProps {
@@ -8,7 +8,7 @@ interface TaskListProps {
 }
 
 const TaskList = ({ tasks, onDelete, onUpdate }: TaskListProps) => {
-  if (tasks.length === 0) return <p>No tenés tareas todavía.</p>
+  if (tasks.length === 0) return <p>No tenes tareas todavia.</p>
 
   return (
     <ul>
