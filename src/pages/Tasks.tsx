@@ -1,6 +1,7 @@
 ﻿import { useState } from "react"
 import { useAuth } from "../hooks/useAuth"
 import { useTasks } from "../hooks/useTasks"
+import { useTheme } from "../hooks/useTheme"
 import { signOut } from "firebase/auth"
 import { auth } from "../services/firebase"
 import { useNavigate } from "react-router-dom"
@@ -10,6 +11,7 @@ import type { Task } from "../types"
 const Tasks = () => {
   const { user } = useAuth()
   const { tasks, loading, addTask, updateTask, deleteTask } = useTasks(user?.uid || "")
+  const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [showForm, setShowForm] = useState(false)
   const [filterStatus, setFilterStatus] = useState("Todo")
@@ -90,9 +92,9 @@ const Tasks = () => {
   )
 
   return (
-    <div style={{ minHeight: "100vh", background: "rgba(245, 240, 235, 0.3)", backdropFilter: "blur(8px)" }}>
+    <div style={{ minHeight: "100vh", background: "var(--card-bg)", backdropFilter: "blur(8px)" }}>
       <header style={{
-        background: "rgba(255,255,255,0.6)",
+        background: "var(--card-bg)",
         backdropFilter: "blur(16px)",
         borderBottom: "1px solid var(--border)",
         padding: "0 32px",
@@ -109,6 +111,15 @@ const Tasks = () => {
           TUAGENDA
         </span>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <button onClick={toggleTheme} style={{
+            padding: "7px 14px",
+            background: "var(--card-bg)",
+            border: "1px solid var(--border)",
+            color: "var(--text)",
+            fontSize: "16px",
+          }}>
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
           <button onClick={handleSendEmail} style={{
             padding: "7px 14px",
             background: "rgba(158, 90, 58, 0.1)",
@@ -148,17 +159,18 @@ const Tasks = () => {
 
         {showForm && (
           <div style={{
-            position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
             display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200
           }}>
             <div style={{
-              background: "rgba(255,255,255,0.95)",
+              background: "var(--card-bg)",
               backdropFilter: "blur(20px)",
               borderRadius: "16px",
               padding: "32px",
               width: "100%",
               maxWidth: "500px",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.2)"
+              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+              border: "1px solid var(--border)"
             }}>
               <h2 style={{ fontSize: "20px", fontWeight: "700", marginBottom: "24px", color: "var(--moss)" }}>
                 Crear Nueva Tarea
@@ -187,7 +199,8 @@ const Tasks = () => {
                 <input type="date" value={newTask.dueDate} onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })} />
                 <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
                   <button type="button" onClick={() => setShowForm(false)} style={{
-                    flex: 1, padding: "11px", background: "white",
+                    flex: 1, padding: "11px",
+                    background: "var(--card-bg)",
                     border: "1px solid var(--border)", color: "var(--text)"
                   }}>
                     Cancelar
@@ -206,7 +219,7 @@ const Tasks = () => {
 
         <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: "24px", marginBottom: "32px" }}>
           <div style={{
-            background: "rgba(255,255,255,0.55)",
+            background: "var(--card-bg)",
             backdropFilter: "blur(16px)",
             borderRadius: "12px",
             padding: "20px",
@@ -234,7 +247,7 @@ const Tasks = () => {
                 {["alta", "media", "baja"].map((p) => (
                   <button key={p} onClick={() => togglePriority(p)} style={{
                     padding: "6px 12px",
-                    background: filterPriority.includes(p) ? "var(--moss)" : "rgba(255,255,255,0.8)",
+                    background: filterPriority.includes(p) ? "var(--moss)" : "var(--card-bg)",
                     color: filterPriority.includes(p) ? "white" : "var(--text)",
                     border: "1px solid var(--border)",
                     fontSize: "13px",
@@ -249,7 +262,7 @@ const Tasks = () => {
           </div>
 
           <div style={{
-            background: "rgba(255,255,255,0.55)",
+            background: "var(--card-bg)",
             backdropFilter: "blur(16px)",
             borderRadius: "12px",
             border: "1px solid var(--border)",
@@ -275,7 +288,7 @@ const Tasks = () => {
               { label: "Vencidas", value: stats.vencidas, color: "#dc2626" },
             ].map((stat) => (
               <div key={stat.label} style={{
-                background: "rgba(255,255,255,0.55)",
+                background: "var(--card-bg)",
                 backdropFilter: "blur(16px)",
                 borderRadius: "12px",
                 padding: "20px",
