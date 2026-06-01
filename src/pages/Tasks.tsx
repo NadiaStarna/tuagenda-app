@@ -18,6 +18,7 @@ const Tasks = () => {
   const [filterPriority, setFilterPriority] = useState<string[]>([])
   const [search, setSearch] = useState("")
   const [toast, setToast] = useState("")
+  const [toastVisible, setToastVisible] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
   const [newTask, setNewTask] = useState({
     title: "",
@@ -30,7 +31,8 @@ const Tasks = () => {
 
   const showToast = (msg: string) => {
     setToast(msg)
-    setTimeout(() => setToast(""), 3000)
+    setToastVisible(true)
+    setTimeout(() => setToastVisible(false), 3000)
   }
 
   const handleLogout = async () => {
@@ -42,6 +44,7 @@ const Tasks = () => {
     if (!user?.email) return
     setEmailLoading(true)
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1200))
       const res = await fetch("/api/sendEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,7 +119,7 @@ const Tasks = () => {
   return (
     <div style={{ minHeight: "100vh", background: "var(--card-bg)", backdropFilter: "blur(8px)" }}>
 
-      {toast && (
+      {toastVisible && (
         <div style={{
           position: "fixed", bottom: "24px", right: "24px",
           background: "var(--moss)", color: "white",
@@ -149,7 +152,7 @@ const Tasks = () => {
           <button onClick={handleSendEmail} disabled={emailLoading} style={{
             padding: "7px 12px", background: "rgba(158, 90, 58, 0.1)",
             border: "1px solid var(--rose-ash)", color: "var(--cinnamon)", fontSize: "13px",
-            opacity: emailLoading ? 0.7 : 1
+            opacity: emailLoading ? 0.7 : 1, cursor: emailLoading ? "not-allowed" : "pointer"
           }}>
             {emailLoading ? "Enviando..." : "Enviar por email"}
           </button>
@@ -175,7 +178,6 @@ const Tasks = () => {
           </button>
         </div>
 
-        {/* BARRA DE PROGRESO */}
         <div style={{
           background: "var(--card-bg)", backdropFilter: "blur(16px)",
           borderRadius: "12px", padding: "16px 20px",
@@ -197,7 +199,6 @@ const Tasks = () => {
           </p>
         </div>
 
-        {/* ESTADISTICAS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "12px", marginBottom: "24px" }}>
           {[
             { label: "Total", value: stats.total, color: "var(--cinnamon)" },
@@ -218,7 +219,6 @@ const Tasks = () => {
           ))}
         </div>
 
-        {/* MODAL */}
         {showForm && (
           <div style={{
             position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
@@ -274,10 +274,8 @@ const Tasks = () => {
           </div>
         )}
 
-        {/* LAYOUT */}
         <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "24px", marginBottom: "32px" }}>
 
-          {/* SIDEBAR */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div style={{
               background: "var(--card-bg)", backdropFilter: "blur(16px)",
@@ -343,7 +341,6 @@ const Tasks = () => {
             )}
           </div>
 
-          {/* LISTA */}
           <div style={{
             background: "var(--card-bg)", backdropFilter: "blur(16px)",
             borderRadius: "12px", border: "1px solid var(--border)", overflow: "hidden"
