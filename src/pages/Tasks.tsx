@@ -18,6 +18,7 @@ const Tasks = () => {
   const [filterPriority, setFilterPriority] = useState<string[]>([])
   const [search, setSearch] = useState("")
   const [toast, setToast] = useState("")
+  const [emailLoading, setEmailLoading] = useState(false)
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -39,6 +40,7 @@ const Tasks = () => {
 
   const handleSendEmail = async () => {
     if (!user?.email) return
+    setEmailLoading(true)
     try {
       const res = await fetch("/api/sendEmail", {
         method: "POST",
@@ -52,6 +54,8 @@ const Tasks = () => {
       }
     } catch {
       showToast("Error al enviar el email")
+    } finally {
+      setEmailLoading(false)
     }
   }
 
@@ -142,11 +146,12 @@ const Tasks = () => {
           }}>
             {theme === "dark" ? "☀️" : "🌙"}
           </button>
-          <button onClick={handleSendEmail} style={{
+          <button onClick={handleSendEmail} disabled={emailLoading} style={{
             padding: "7px 12px", background: "rgba(158, 90, 58, 0.1)",
             border: "1px solid var(--rose-ash)", color: "var(--cinnamon)", fontSize: "13px",
+            opacity: emailLoading ? 0.7 : 1
           }}>
-            Enviar por email
+            {emailLoading ? "Enviando..." : "Enviar por email"}
           </button>
           <button onClick={handleLogout} style={{
             padding: "7px 12px", background: "var(--moss)",
