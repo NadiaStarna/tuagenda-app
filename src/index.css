@@ -22,12 +22,12 @@
 }
 
 body[data-theme="dark"] {
-  --border: #3a3a3a;
+  --border: #3a3530;
   --text: #f0ece8;
   --text-muted: #a0998f;
-  --bg-overlay: rgba(20, 15, 10, 0.65);
-  --card-bg: rgba(30, 25, 20, 0.75);
-  --input-bg: rgba(40, 35, 30, 0.9);
+  --bg-overlay: rgba(15, 10, 5, 0.75);
+  --card-bg: rgba(25, 20, 15, 0.80);
+  --input-bg: rgba(35, 28, 22, 0.95);
   --moss: #7aaa77;
   --cinnamon: #e8956a;
   --rose-ash: #e8a898;
@@ -37,7 +37,7 @@ body {
   font-family: "Inter", sans-serif;
   min-height: 100vh;
   background-color: #f5f0eb;
-  background-image: url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920&q=90");
+  background-image: url("https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1920&q=90");
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
@@ -72,6 +72,10 @@ input, textarea, select {
   font-size: 14px;
 }
 
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
 input:focus, textarea:focus, select:focus {
   border-color: var(--cinnamon);
 }
@@ -98,4 +102,9 @@ a {
 
 a:hover {
   color: var(--moss);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -42,17 +42,7 @@ const Register = () => {
         boxShadow: "0 20px 60px rgba(58, 74, 55, 0.12)"
       }}>
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <div style={{
-            width: "56px",
-            height: "56px",
-            background: "linear-gradient(135deg, #b8897e, #8a4a2a)",
-            borderRadius: "16px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 16px",
-            fontSize: "24px"
-          }}>📋</div>
+          <div style={{ fontSize: "52px", marginBottom: "16px" }}>📋</div>
           <h1 style={{
             fontSize: "26px",
             fontWeight: "800",
