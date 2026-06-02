@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom"
 import TaskList from "../components/TaskList"
 import type { Task } from "../types"
 
+const TODAY = new Date().toISOString().split("T")[0]
+
 const Tasks = () => {
   const { user } = useAuth()
   const { tasks, loading, addTask, updateTask, deleteTask } = useTasks(user?.uid || "")
@@ -30,9 +32,13 @@ const Tasks = () => {
   })
 
   const showToast = (msg: string) => {
-    setToast(msg)
-    setToastVisible(true)
-    setTimeout(() => setToastVisible(false), 3000)
+    setToastVisible(false)
+    setToast("")
+    setTimeout(() => {
+      setToast(msg)
+      setToastVisible(true)
+      setTimeout(() => setToastVisible(false), 3000)
+    }, 50)
   }
 
   const handleLogout = async () => {
@@ -258,7 +264,12 @@ const Tasks = () => {
                   <option value="hogar">Hogar</option>
                   <option value="otro">Otro</option>
                 </select>
-                <input type="date" value={newTask.dueDate} onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })} />
+                <input
+                  type="date"
+                  value={newTask.dueDate}
+                  min={TODAY}
+                  onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                />
                 <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
                   <button type="button" onClick={() => setShowForm(false)} style={{
                     flex: 1, padding: "11px", background: "var(--card-bg)",

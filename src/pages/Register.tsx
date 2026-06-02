@@ -6,12 +6,37 @@ import { useNavigate, Link } from "react-router-dom"
 const Register = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [birthDate, setBirthDate] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
+  const validateAge = (date: string) => {
+    const birth = new Date(date)
+    const today = new Date()
+    const age = today.getFullYear() - birth.getFullYear()
+    const month = today.getMonth() - birth.getMonth()
+    if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
+      return age - 1
+    }
+    return age
+  }
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
+
+    if (!birthDate) {
+      setError("Ingresa tu fecha de nacimiento.")
+      return
+    }
+
+    const age = validateAge(birthDate)
+    if (age < 16) {
+      setError("Debes tener al menos 16 anos para registrarte.")
+      return
+    }
+
     setLoading(true)
     try {
       await createUserWithEmailAndPassword(auth, email, password)
@@ -22,6 +47,10 @@ const Register = () => {
       setLoading(false)
     }
   }
+
+  const maxDate = new Date()
+  maxDate.setFullYear(maxDate.getFullYear() - 16)
+  const maxDateStr = maxDate.toISOString().split("T")[0]
 
   return (
     <div style={{
@@ -78,6 +107,21 @@ const Register = () => {
               CONTRASENA
             </label>
             <input type="password" placeholder="Tu contrasena" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </div>
+          <div>
+            <label style={{ fontSize: "12px", fontWeight: "700", color: "#3a4a37", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>
+              FECHA DE NACIMIENTO
+            </label>
+            <input
+              type="date"
+              value={birthDate}
+              max={maxDateStr}
+              onChange={(e) => setBirthDate(e.target.value)}
+              required
+            />
+            <p style={{ fontSize: "11px", color: "#6a6a6a", marginTop: "4px" }}>
+              Debes tener al menos 16 anos para registrarte.
+            </p>
           </div>
           <button type="submit" disabled={loading} style={{
             marginTop: "8px",
