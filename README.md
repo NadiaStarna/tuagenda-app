@@ -8,46 +8,63 @@ https://gestor-tareas-m4.vercel.app
 
 ## Descripcion del proyecto
 
-TuAgenda permite a los usuarios gestionar sus tareas diarias de forma organizada. Cada usuario tiene sus propias tareas almacenadas en la nube, puede crear, editar, eliminar y marcar tareas como completadas, filtrar por estado y prioridad, ver estadisticas en tiempo real y recibir un resumen por email.
+TuAgenda es una aplicacion que permite a los usuarios gestionar sus tareas diarias de forma organizada. Cada usuario tiene sus propias tareas almacenadas en la nube, puede crear, editar, eliminar y marcar tareas como completadas, filtrar por estado y prioridad, ver estadisticas en tiempo real y recibir un resumen por email.
 
 ## Stack tecnologico
 
-- React + TypeScript + Vite
-- Firebase Auth + Cloud Firestore
-- AWS SES via Vercel Functions
-- Vitest + React Testing Library
-- Vercel
+| Tecnologia | Uso |
+|------------|-----|
+| React + TypeScript | Frontend |
+| Vite | Bundler |
+| Firebase Auth | Autenticacion |
+| Cloud Firestore | Base de datos |
+| AWS SES | Envio de emails |
+| Vercel Functions | Backend serverless |
+| Vitest + RTL | Testing |
+| Vercel | Deploy |
 
 ## Estructura del proyecto
 
 gestor-tareas-m4/
-- src/pages/ - Login, Register, Tasks
-- src/components/ - TaskCard, TaskForm, TaskList
-- src/hooks/ - useAuth, useTasks, useTheme
+- src/pages/ - Login.tsx, Register.tsx, Tasks.tsx
+- src/components/ - TaskCard.tsx, TaskForm.tsx, TaskList.tsx
+- src/hooks/ - useAuth.ts, useTasks.ts, useTheme.ts
 - src/services/ - firebase.ts
-- src/routes/ - ProtectedRoute
+- src/routes/ - ProtectedRoute.tsx
 - src/types/ - index.ts
-- api/ - sendEmail.js (Vercel Function)
-- tests/ - TaskForm, TaskList, TaskCard tests
+- src/features/
+- src/utils/
+- api/ - sendEmail.js
+- functions/ - sendEmail.js
+- tests/ - setup.ts, TaskForm.test.tsx, TaskList.test.tsx, TaskCard.test.tsx
 - .env.example
+- .gitignore
+- index.html
+- package.json
+- vite.config.ts
 - README.md
 
 ## Instrucciones de instalacion
 
 1. Clonar el repositorio
 git clone https://github.com/NadiaStarna/ProyectoM4-NadiaStarna.git
+cd gestor-tareas-m4
 
 2. Instalar dependencias
 npm install
 
 3. Configurar variables de entorno
 cp .env.example .env
+Completar el .env con las credenciales de Firebase y AWS.
 
 4. Ejecutar en desarrollo
 npm run dev
 
 5. Ejecutar tests
 npx vitest run
+
+6. Build de produccion
+npm run build
 
 ## Variables de entorno
 
@@ -74,8 +91,8 @@ SES_FROM_EMAIL=
 
 ## Flujo de envio de emails
 
-1. El usuario hace clic en Enviar por email
-2. El frontend llama a /api/sendEmail via POST
+1. El usuario hace clic en Enviar resumen por email
+2. El frontend llama a /api/sendEmail via POST con el email del usuario y la lista de tareas
 3. La Vercel Function recibe el request del lado del servidor
 4. Usa AWS SES para enviar el email con el resumen de tareas
 5. Las credenciales de AWS nunca se exponen al frontend
@@ -87,43 +104,28 @@ SES_FROM_EMAIL=
 - TaskCard.test.tsx - Renderizado, badge, eliminacion y tarea completada
 
 Resultado: 8 tests pasando
+npx vitest run
 
 ## Uso de inteligencia artificial en el desarrollo
 
-Se utilizo Claude (Anthropic) como asistente durante todo el proceso de desarrollo.
+Se utilizo Claude (Anthropic) y Chat GPT como asistentes durante todo el proceso de desarrollo del proyecto.
 
-### Como se integro la IA
+Como se integro la IA
 
-El proceso fue colaborativo. Cada bloque de codigo fue analizado, cuestionado y adaptado. La IA fue usada como un par de programacion que explica, sugiere y corrige.
+El proceso de trabajo con IA fue colaborativo y critico. En lugar de copiar y pegar codigo sin entender, cada bloque fue analizado, cuestionado y adaptado a las necesidades del proyecto. La IA fue usada como un par de programacion que explica, sugiere y corrige, no como un generador automatico de codigo.
 
-### Situaciones donde fue mas efectiva
+Evidencia del proceso
 
-- Configuracion de Firebase Auth y Firestore
-- Implementacion de hooks personalizados con logica de tiempo real
-- Configuracion del endpoint serverless para AWS SES
-- Escritura de tests con Vitest y mocks
-- Debugging de errores de TypeScript y CORS
+La carpeta /docs contiene capturas de pantalla del proceso de trabajo con IA.
 
-### Patrones descubiertos
-
-- Separar logica en hooks mejora reutilizacion y testing
-- Variables de entorno con prefijo VITE_ para frontend, sin prefijo para servidor
-- Commits semanticos frecuentes facilitan el seguimiento
-- Reglas de Firestore son esenciales para seguridad por usuario
-- Funciones serverless para proteger credenciales
-
-### Evidencia del proceso
-
-La carpeta /docs contiene capturas del proceso de trabajo con IA.
-
-Prompt 1 - Estructura inicial del proyecto
+Prompt 1 - error de consola
 ![Prompt 1](./docs/prompt1.png)
 
-Prompt 2 - Configuracion de Firebase
+Prompt 2 - Vercel Functions y AWS SES
 ![Prompt 2](./docs/prompt2.png)
 
-Prompt 3 - Vercel Functions y AWS SES
+Prompt 3 - Firebase
 ![Prompt 3](./docs/prompt3.png)
 
-Prompt 4 - Testing con Vitest
+Prompt 4 - Vite
 ![Prompt 4](./docs/prompt4.png)
