@@ -10,6 +10,12 @@ import type { Task } from "../types"
 
 const TODAY = new Date().toISOString().split("T")[0]
 
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return ""
+  const [year, month, day] = dateStr.split("-")
+  return `${day}/${month}/${year}`
+}
+
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   useEffect(() => {
@@ -263,76 +269,77 @@ const Tasks = () => {
 
         {showForm && (
           <div style={{
-            position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
+            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+            background: "rgba(0,0,0,0.6)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            zIndex: 200, padding: "16px",
-            overflowY: "auto"
+            zIndex: 200, padding: "16px"
           }}>
             <div style={{
               background: "var(--card-bg)", backdropFilter: "blur(20px)",
-              borderRadius: "16px", padding: isMobile ? "20px 16px" : "32px",
-              width: "100%", maxWidth: isMobile ? "100%" : "500px",
+              borderRadius: "16px", padding: "20px",
+              width: "100%", maxWidth: "460px",
               boxShadow: "0 20px 60px rgba(0,0,0,0.3)", border: "1px solid var(--border)",
-              maxHeight: isMobile ? "100%" : "90vh",
-              overflowY: "auto",
-              margin: "auto"
             }}>
-              <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "20px", color: "var(--moss)" }}>
+              <h2 style={{ fontSize: "16px", fontWeight: "700", marginBottom: "14px", color: "var(--moss)" }}>
                 Crear Nueva Tarea
               </h2>
-              <form onSubmit={handleAddTask} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <form onSubmit={handleAddTask} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <div>
-                  <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--moss)", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>TITULO</label>
-                  <input placeholder="Ej: Estudiar para el examen" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} required />
+                  <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>TITULO</label>
+                  <input placeholder="Ej: Estudiar para el examen" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} required style={{ padding: "7px 10px", fontSize: "14px" }} />
                 </div>
                 <div>
-                  <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--moss)", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>DESCRIPCION</label>
-                  <textarea placeholder="Ej: Repasar capitulos 3 y 4 del libro" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} rows={3} style={{ resize: "none" }} />
+                  <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>DESCRIPCION</label>
+                  <textarea placeholder="Ej: Repasar capitulos 3 y 4" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} rows={2} style={{ resize: "none", padding: "7px 10px", fontSize: "14px" }} />
                 </div>
-                <div>
-                  <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--moss)", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>PRIORIDAD</label>
-                  <select value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value as Task["priority"] })}>
-                    <option value="">Seleccionar prioridad</option>
-                    <option value="alta">Alta - Urgente</option>
-                    <option value="media">Media - Normal</option>
-                    <option value="baja">Baja - Cuando pueda</option>
-                  </select>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                  <div>
+                    <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>PRIORIDAD</label>
+                    <select value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value as Task["priority"] })} style={{ padding: "7px 10px", fontSize: "14px" }}>
+                      <option value="">Seleccionar</option>
+                      <option value="alta">Alta</option>
+                      <option value="media">Media</option>
+                      <option value="baja">Baja</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>ESTADO</label>
+                    <select value={newTask.status} onChange={(e) => setNewTask({ ...newTask, status: e.target.value as Task["status"] })} style={{ padding: "7px 10px", fontSize: "14px" }}>
+                      <option value="">Seleccionar</option>
+                      <option value="pendiente">Pendiente</option>
+                      <option value="en_progreso">En Progreso</option>
+                      <option value="completada">Completada</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--moss)", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>ESTADO</label>
-                  <select value={newTask.status} onChange={(e) => setNewTask({ ...newTask, status: e.target.value as Task["status"] })}>
-                    <option value="">Seleccionar estado</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_progreso">En Progreso</option>
-                    <option value="completada">Completada</option>
-                  </select>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                  <div>
+                    <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>CATEGORIA</label>
+                    <select value={newTask.category} onChange={(e) => setNewTask({ ...newTask, category: e.target.value as Task["category"] })} style={{ padding: "7px 10px", fontSize: "14px" }}>
+                      <option value="">Seleccionar</option>
+                      <option value="trabajo">Trabajo</option>
+                      <option value="personal">Personal</option>
+                      <option value="salud">Salud</option>
+                      <option value="estudio">Estudio</option>
+                      <option value="hogar">Hogar</option>
+                      <option value="otro">Otro</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>FECHA LIMITE</label>
+                    <input type="date" value={newTask.dueDate} min={TODAY} onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })} style={{ padding: "7px 10px", fontSize: "14px" }} />
+                  </div>
                 </div>
-                <div>
-                  <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--moss)", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>CATEGORIA</label>
-                  <select value={newTask.category} onChange={(e) => setNewTask({ ...newTask, category: e.target.value as Task["category"] })}>
-                    <option value="">Seleccionar categoria</option>
-                    <option value="trabajo">Trabajo</option>
-                    <option value="personal">Personal</option>
-                    <option value="salud">Salud</option>
-                    <option value="estudio">Estudio</option>
-                    <option value="hogar">Hogar</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
-                <div>
-                  <label style={{ fontSize: "12px", fontWeight: "700", color: "var(--moss)", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>FECHA LIMITE</label>
-                  <input type="date" value={newTask.dueDate} min={TODAY} onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })} />
-                </div>
-                <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+                <div style={{ display: "flex", gap: "10px", marginTop: "6px" }}>
                   <button type="button" onClick={() => setShowForm(false)} disabled={taskLoading} style={{
-                    flex: 1, padding: "11px", background: "var(--card-bg)",
+                    flex: 1, padding: "9px", background: "var(--card-bg)",
                     border: "1px solid var(--border)", color: "var(--text)",
-                    opacity: taskLoading ? 0.5 : 1
+                    opacity: taskLoading ? 0.5 : 1, fontSize: "14px"
                   }}>Cancelar</button>
                   <button type="submit" disabled={taskLoading} style={{
-                    flex: 1, padding: "11px", background: "var(--cinnamon)",
+                    flex: 1, padding: "9px", background: "var(--cinnamon)",
                     border: "none", color: "white", fontWeight: "700",
-                    opacity: taskLoading ? 0.7 : 1
+                    opacity: taskLoading ? 0.7 : 1, fontSize: "14px"
                   }}>
                     {taskLoading ? "Guardando..." : "Crear Tarea"}
                   </button>
@@ -343,9 +350,7 @@ const Tasks = () => {
         )}
 
         <div className="main-layout">
-
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-
             {isMobile && (
               <button onClick={() => setShowFilters(!showFilters)} style={{
                 padding: "10px 16px", background: "var(--card-bg)",
@@ -415,7 +420,7 @@ const Tasks = () => {
                   </p>
                   {proximaTarea.dueDate && (
                     <p style={{ color: "var(--text-muted)", fontSize: "12px" }}>
-                      📅 {new Date(proximaTarea.dueDate).toLocaleDateString("es-AR")}
+                      📅 {formatDate(proximaTarea.dueDate)}
                     </p>
                   )}
                 </div>

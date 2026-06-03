@@ -14,6 +14,12 @@ const priorityBadge: Record<Task["priority"], { bg: string; color: string; label
   baja: { bg: "#dbeafe", color: "#2563eb", label: "Baja" },
 }
 
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return ""
+  const [year, month, day] = dateStr.split("-")
+  return `${day}/${month}/${year}`
+}
+
 const TaskCard = ({ task, onDelete, onUpdate, onToast }: TaskCardProps) => {
   const [showMenu, setShowMenu] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -115,7 +121,7 @@ const TaskCard = ({ task, onDelete, onUpdate, onToast }: TaskCardProps) => {
           </span>
           {task.dueDate && (
             <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>
-              📅 {new Date(task.dueDate).toLocaleDateString("es-AR")}
+              📅 {formatDate(task.dueDate)}
             </span>
           )}
           <span style={{ fontSize: "12px", color: "var(--text-muted)", textTransform: "capitalize" }}>
