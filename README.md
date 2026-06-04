@@ -6,6 +6,15 @@ Aplicacion web SPA para gestion de tareas con autenticacion de usuarios, persist
 
 https://gestor-tareas-m4.vercel.app
 
+## Cuenta de prueba para correcciones
+
+Para probar el envio de emails, usar esta cuenta verificada en AWS SES:
+
+- Email: starnanadia.pruebas@gmail.com
+- Contrasena: Starna1234
+
+Nota: AWS SES esta en modo sandbox, por lo que solo puede enviar emails a direcciones verificadas. Esta cuenta esta verificada y permite probar el flujo completo de envio de resumen por email.
+
 ## Descripcion del proyecto
 
 TuAgenda es una aplicacion que permite a los usuarios gestionar sus tareas diarias de forma organizada. Cada usuario tiene sus propias tareas almacenadas en la nube, puede crear, editar, eliminar y marcar tareas como completadas, filtrar por estado y prioridad, ver estadisticas en tiempo real y recibir un resumen por email.
