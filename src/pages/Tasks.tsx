@@ -35,7 +35,8 @@ const Tasks = () => {
   const [showForm, setShowForm] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const [filterStatus, setFilterStatus] = useState("Todo")
-  const [filterPriority, setFilterPriority] = useState<string[]>([])
+  const [filterPriority, setFilterPriority] = useState("")
+  const [sortBy, setSortBy] = useState("")
   const [search, setSearch] = useState("")
   const [toast, setToast] = useState("")
   const [toastVisible, setToastVisible] = useState(false)
@@ -111,18 +112,32 @@ const Tasks = () => {
     }
   }
 
-  const togglePriority = (p: string) => {
-    setFilterPriority((prev) =>
-      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
-    )
-  }
+  const priorityOrder: Record<string, number> = { alta: 0, media: 1, baja: 2 }
 
-  const filteredTasks = tasks.filter((task) => {
-    const statusMatch = filterStatus === "Todo" || task.status === filterStatus
-    const priorityMatch = filterPriority.length === 0 || filterPriority.includes(task.priority)
-    const searchMatch = task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())
-    return statusMatch && priorityMatch && searchMatch
-  })
+  const filteredTasks = tasks
+    .filter((task) => {
+      const statusMatch = filterStatus === "Todo" || task.status === filterStatus
+      const priorityMatch = filterPriority === "" || task.priority === filterPriority
+      const searchMatch = task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())
+      return statusMatch && priorityMatch && searchMatch
+    })
+    .sort((a, b) => {
+      if (sortBy === "fecha") {
+        if (a.dueDate && b.dueDate) return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+        if (a.dueDate) return -1
+        if (b.dueDate) return 1
+        return 0
+      }
+      if (sortBy === "prioridad") {
+        return priorityOrder[a.priority] - priorityOrder[b.priority]
+      }
+      if (sortBy === "ambos") {
+        const dateDiff = (a.dueDate && b.dueDate) ? new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime() : 0
+        if (dateDiff !== 0) return dateDiff
+        return priorityOrder[a.priority] - priorityOrder[b.priority]
+      }
+      return 0
+    })
 
   const stats = {
     total: tasks.length,
@@ -134,7 +149,6 @@ const Tasks = () => {
 
   const progreso = tasks.length > 0 ? Math.round((stats.completadas / tasks.length) * 100) : 0
 
-  const priorityOrder: Record<string, number> = { alta: 0, media: 1, baja: 2 }
   const proximaTarea = tasks
     .filter((t) => t.status !== "completada")
     .sort((a, b) => {
@@ -159,19 +173,7 @@ const Tasks = () => {
   return (
     <div style={{ minHeight: "100vh", background: "var(--card-bg)", backdropFilter: "blur(8px)" }}>
 
-      {toastVisible && (
-        <div style={{
-          position: "fixed", bottom: "24px", right: "16px",
-          background: "var(--moss)", color: "white",
-          padding: "12px 20px", borderRadius: "10px",
-          fontSize: "14px", fontWeight: "600", zIndex: 999,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-          animation: "fadeIn 0.3s ease",
-          maxWidth: "calc(100vw - 32px)"
-        }}>
-          {toast}
-        </div>
-      )}
+      {toastVisible && <div className="toast">{toast}</div>}
 
       <header style={{
         background: "var(--card-bg)", backdropFilter: "blur(16px)",
@@ -286,11 +288,11 @@ const Tasks = () => {
               <form onSubmit={handleAddTask} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <div>
                   <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>TITULO</label>
-                  <input placeholder="Ej: Estudiar para el examen" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} required style={{ padding: "7px 10px", fontSize: "14px" }} />
+                  <input placeholder="Ej: Estudiar para el examen" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} required style={{ padding: "7px 10px", fontSize: "14px" }} maxLength={100} />
                 </div>
                 <div>
                   <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>DESCRIPCION</label>
-                  <textarea placeholder="Ej: Repasar capitulos 3 y 4" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} rows={2} style={{ resize: "none", padding: "7px 10px", fontSize: "14px" }} />
+                  <textarea placeholder="Ej: Repasar capitulos 3 y 4" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} rows={2} style={{ resize: "none", padding: "7px 10px", fontSize: "14px" }} maxLength={300} />
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                   <div>
@@ -326,7 +328,7 @@ const Tasks = () => {
                     </select>
                   </div>
                   <div>
-                    <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>FECHA LIMITE</label>
+                    <label style={{ fontSize: "10px", fontWeight: "700", color: "var(--moss)", marginBottom: "3px", display: "block", letterSpacing: "0.05em" }}>{isMobile ? "FECHA" : "FECHA LIMITE"}</label>
                     <input type="date" value={newTask.dueDate} min={TODAY} onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })} style={{ padding: "7px 10px", fontSize: "14px" }} />
                   </div>
                 </div>
@@ -351,6 +353,7 @@ const Tasks = () => {
 
         <div className="main-layout">
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+
             {isMobile && (
               <button onClick={() => setShowFilters(!showFilters)} style={{
                 padding: "10px 16px", background: "var(--card-bg)",
@@ -370,6 +373,17 @@ const Tasks = () => {
                 transition: "background 0.3s, border-color 0.3s"
               }}>
                 {!isMobile && <h3 style={{ fontSize: "14px", fontWeight: "700", marginBottom: "16px", color: "var(--moss)" }}>Filtros</h3>}
+
+                <div style={{ marginBottom: "16px" }}>
+                  <label style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "8px", display: "block", fontWeight: "600" }}>Ordenar por</label>
+                  <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                    <option value="">Sin orden</option>
+                    <option value="fecha">Fecha</option>
+                    <option value="prioridad">Prioridad</option>
+                    <option value="ambos">Fecha + Prioridad</option>
+                  </select>
+                </div>
+
                 <div style={{ marginBottom: "16px" }}>
                   <label style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "8px", display: "block", fontWeight: "600" }}>Estado</label>
                   <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
@@ -379,17 +393,18 @@ const Tasks = () => {
                     <option value="completada">Completada</option>
                   </select>
                 </div>
+
                 <div>
                   <label style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "8px", display: "block", fontWeight: "600" }}>Prioridad</label>
                   <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                     {["alta", "media", "baja"].map((p) => (
-                      <button key={p} onClick={() => togglePriority(p)} style={{
+                      <button key={p} onClick={() => setFilterPriority(filterPriority === p ? "" : p)} style={{
                         padding: "6px 12px",
-                        background: filterPriority.includes(p) ? "var(--moss)" : "var(--card-bg)",
-                        color: filterPriority.includes(p) ? "white" : "var(--text)",
+                        background: filterPriority === p ? "var(--moss)" : "var(--card-bg)",
+                        color: filterPriority === p ? "white" : "var(--text)",
                         border: "1px solid var(--border)", fontSize: "13px", fontWeight: "500", textTransform: "capitalize"
                       }}>
-                        {p.charAt(0).toUpperCase() + p.slice(1)}
+                        {p === "media" ? "Media" : p.charAt(0).toUpperCase() + p.slice(1)}
                       </button>
                     ))}
                   </div>
@@ -439,7 +454,7 @@ const Tasks = () => {
               <h3 style={{ fontSize: "14px", fontWeight: "700", color: "var(--moss)", marginBottom: "12px" }}>Lista de Tareas</h3>
               <input placeholder="Buscar tareas..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ width: "100%" }} />
             </div>
-            <div style={{ maxHeight: isMobile ? "none" : "360px", overflowY: isMobile ? "visible" : "auto" }}>
+            <div style={{ maxHeight: isMobile ? "none" : "240px", overflowY: isMobile ? "visible" : "auto" }}>
               <TaskList tasks={filteredTasks} onDelete={deleteTask} onUpdate={updateTask} onToast={showToast} />
             </div>
           </div>
