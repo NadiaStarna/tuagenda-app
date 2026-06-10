@@ -16,9 +16,7 @@ const Register = () => {
     const today = new Date()
     const age = today.getFullYear() - birth.getFullYear()
     const month = today.getMonth() - birth.getMonth()
-    if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
-      return age - 1
-    }
+    if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) return age - 1
     return age
   }
 
@@ -26,13 +24,27 @@ const Register = () => {
     e.preventDefault()
     setError("")
 
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("Ingresa un email valido.")
+      return
+    }
+    if (password.length < 6) {
+      setError("La contrasena debe tener al menos 6 caracteres.")
+      return
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError("La contrasena debe tener al menos una mayuscula.")
+      return
+    }
+    if (!/[0-9]/.test(password)) {
+      setError("La contrasena debe tener al menos un numero.")
+      return
+    }
     if (!birthDate) {
       setError("Ingresa tu fecha de nacimiento.")
       return
     }
-
-    const age = validateAge(birthDate)
-    if (age < 16) {
+    if (validateAge(birthDate) < 16) {
       setError("Debes tener al menos 16 anos para registrarte.")
       return
     }
@@ -53,92 +65,34 @@ const Register = () => {
   const maxDateStr = maxDate.toISOString().split("T")[0]
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "20px"
-    }}>
-      <div style={{
-        background: "rgba(255,255,255,0.78)",
-        backdropFilter: "blur(12px)",
-        borderRadius: "20px",
-        padding: "48px 40px",
-        width: "100%",
-        maxWidth: "420px",
-        border: "1px solid rgba(212, 200, 192, 0.6)",
-        boxShadow: "0 20px 60px rgba(58, 74, 55, 0.12)"
-      }}>
-        <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <div style={{ fontSize: "52px", marginBottom: "16px" }}>📋</div>
-          <h1 style={{
-            fontSize: "26px",
-            fontWeight: "800",
-            color: "#3a4a37",
-            marginBottom: "8px"
-          }}>Crear cuenta</h1>
-          <p style={{ color: "#6a6a6a", fontSize: "14px" }}>
-            Registrate para comenzar a gestionar tus tareas
-          </p>
-        </div>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-card__icon">📋</div>
+        <h1 className="auth-card__title">Crear cuenta</h1>
+        <p className="auth-card__subtitle">Registrate para comenzar a gestionar tus tareas</p>
 
-        {error && (
-          <div style={{
-            background: "rgba(184, 137, 126, 0.15)",
-            border: "1px solid rgba(184, 137, 126, 0.4)",
-            borderRadius: "10px",
-            padding: "12px",
-            marginBottom: "16px",
-            fontSize: "14px",
-            color: "#8a4a2a"
-          }}>{error}</div>
-        )}
+        {error && <div className="auth-card__error">{error}</div>}
 
-        <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <form className="auth-card__form" onSubmit={handleRegister}>
           <div>
-            <label style={{ fontSize: "12px", fontWeight: "700", color: "#3a4a37", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>
-              EMAIL
-            </label>
+            <label className="auth-card__label">EMAIL</label>
             <input type="email" placeholder="tu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div>
-            <label style={{ fontSize: "12px", fontWeight: "700", color: "#3a4a37", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>
-              CONTRASENA
-            </label>
-            <input type="password" placeholder="Tu contrasena" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <label className="auth-card__label">CONTRASENA</label>
+            <input type="password" placeholder="Min 6 caracteres, 1 mayuscula, 1 numero" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
           <div>
-            <label style={{ fontSize: "12px", fontWeight: "700", color: "#3a4a37", marginBottom: "6px", display: "block", letterSpacing: "0.05em" }}>
-              FECHA DE NACIMIENTO
-            </label>
-            <input
-              type="date"
-              value={birthDate}
-              max={maxDateStr}
-              onChange={(e) => setBirthDate(e.target.value)}
-              required
-            />
-            <p style={{ fontSize: "11px", color: "#6a6a6a", marginTop: "4px" }}>
-              Debes tener al menos 16 anos para registrarte.
-            </p>
+            <label className="auth-card__label">FECHA DE NACIMIENTO</label>
+            <input type="date" value={birthDate} max={maxDateStr} onChange={(e) => setBirthDate(e.target.value)} required />
+            <p style={{ fontSize: "11px", color: "#6a6a6a", marginTop: "4px" }}>Debes tener al menos 16 anos.</p>
           </div>
-          <button type="submit" disabled={loading} style={{
-            marginTop: "8px",
-            padding: "13px",
-            background: "linear-gradient(135deg, #b8897e, #8a4a2a)",
-            border: "none",
-            color: "white",
-            fontSize: "15px",
-            fontWeight: "700",
-            opacity: loading ? 0.7 : 1,
-            boxShadow: "0 4px 15px rgba(138, 74, 42, 0.3)"
-          }}>
+          <button type="submit" className="auth-card__submit-btn" disabled={loading}>
             {loading ? "Creando cuenta..." : "Crear cuenta"}
           </button>
         </form>
 
-        <p style={{ textAlign: "center", marginTop: "24px", fontSize: "14px", color: "#6a6a6a" }}>
+        <p className="auth-card__footer">
           Ya tenes cuenta? <Link to="/login">Inicia sesion</Link>
         </p>
       </div>
