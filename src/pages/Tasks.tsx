@@ -7,6 +7,7 @@ import { auth } from "../services/firebase"
 import { useNavigate } from "react-router-dom"
 import TaskList from "../components/TaskList"
 import type { Task } from "../types"
+import logo from "../assets/logo.png"
 
 const TODAY = new Date().toISOString().split("T")[0]
 
@@ -183,9 +184,12 @@ const Tasks = () => {
         boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
         transition: "background 0.3s, border-color 0.3s"
       }}>
-        <span style={{ fontWeight: "800", fontSize: "16px", color: "var(--cinnamon)", letterSpacing: "0.05em" }}>
-          TUAGENDA
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <img src={logo} alt="TuAgenda" style={{ height: "46px", width: "auto" }} />
+          <span style={{ fontWeight: "800", fontSize: "16px", color: "var(--cinnamon)", letterSpacing: "0.05em" }}>
+            TUAGENDA
+          </span>
+        </div>
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
           <button onClick={toggleTheme} style={{
             padding: "7px 10px", background: "var(--card-bg)",

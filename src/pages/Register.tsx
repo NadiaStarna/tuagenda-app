@@ -2,6 +2,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../services/firebase"
 import { useNavigate, Link } from "react-router-dom"
+import logo from "../assets/logo.png"
 
 const Register = () => {
   const [email, setEmail] = useState("")
@@ -67,7 +68,7 @@ const Register = () => {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-card__icon">📋</div>
+        <img src={logo} alt="TuAgenda" className="auth-card__logo" />
         <h1 className="auth-card__title">Crear cuenta</h1>
         <p className="auth-card__subtitle">Registrate para comenzar a gestionar tus tareas</p>
 

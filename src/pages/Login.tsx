@@ -2,6 +2,7 @@
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { auth } from "../services/firebase"
 import { useNavigate, Link } from "react-router-dom"
+import logo from "../assets/logo.png"
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -44,7 +45,7 @@ const Login = () => {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-card__icon">📋</div>
+        <img src={logo} alt="TuAgenda" className="auth-card__logo" />
         <h1 className="auth-card__title">Bienvenido a TuAgenda</h1>
         <p className="auth-card__subtitle">Ingresa a tu cuenta para continuar</p>
 
