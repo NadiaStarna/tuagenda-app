@@ -41,6 +41,7 @@ gestor-tareas-m4/
 - src/services/ - firebase.ts
 - src/routes/ - ProtectedRoute.tsx
 - src/types/ - index.ts
+- src/assets/ - logo.png, wave-bg.jpg
 - src/features/
 - src/utils/
 - api/ - sendEmail.js
@@ -56,8 +57,8 @@ gestor-tareas-m4/
 ## Instrucciones de instalacion
 
 1. Clonar el repositorio
-git clone https://github.com/NadiaStarna/ProyectoM4-NadiaStarna.git
-cd gestor-tareas-m4
+git clone https://github.com/NadiaStarna/tuagenda-app.git
+cd tuagenda-app
 
 2. Instalar dependencias
 npm install
@@ -97,6 +98,19 @@ SES_FROM_EMAIL=
 - Vercel Functions para proteger credenciales de AWS SES
 - TypeScript con tipos reutilizables definidos en src/types/index.ts
 - Hooks personalizados useAuth, useTasks y useTheme para encapsular logica
+
+## Identidad visual
+
+La paleta de colores esta definida mediante variables CSS en `src/index.css`, lo que permite que todo cambio de color se propague automaticamente a toda la aplicacion sin tocar componentes individuales:
+
+- **Azul profundo** (`--moss`): color principal, usado en titulos, boton de accion primario y estados completados
+- **Naranja** (`--cinnamon`): acento secundario, usado en links y elementos interactivos
+- **Verde** (`--sage`): usado en la barra de progreso y estados de exito
+- **Mostaza dorado** (`--rose-ash`): acento adicional, usado en badges y mensajes de estado
+
+El logo (un cerebro junto a una planta y un clipboard con grafico de progreso) representa la combinacion de organizacion mental y crecimiento personal que propone la app. Aparece en las pantallas de Login, Register y en el header principal.
+
+El fondo de la aplicacion usa una imagen abstracta que combina los tonos de la paleta, reforzando la identidad visual de la marca en toda la experiencia.
 
 ## Flujo de envio de emails
 
@@ -138,3 +152,7 @@ Prompt 3 - Firebase
 
 Prompt 4 - Vite
 ![Prompt 4](./docs/prompt4.png)
+
+## Autora
+
+Nadia Starna 
